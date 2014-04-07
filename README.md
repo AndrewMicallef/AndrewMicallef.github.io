@@ -4,4 +4,4 @@ Hello World
 I'm Using Markup
 ----------------
 
-Here is a [link](http://AndrewMicallef.github.io/)?
+* Here is [my GitHub page](http://AndrewMicallef.github.io/)
