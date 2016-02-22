@@ -1,15 +1,72 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-<body>
-<h1>Hello World</h1>
+  
+  <head>
+    <script type="text/javascript">
+      // Global variables
+      var X = 150; // Ball x position.
+      var Y = 150; // Ball y position.
+      
+      // This function is called on page load.
+      function drawGameSVG() {
+        // Play the game until the ball stops.
+        gameLoop = setInterval(drawBall, 0);
+        // Add keyboard listener.
+        window.addEventListener('keydown', whatKey, true);
+      }
+      function drawBall() {
+        // Change the ball location.
+        ball.setAttribute("cx", X);
+        ball.setAttribute("cy", Y);
+	}
+		// Get key press.
+	function whatKey(evt) {
+		switch (evt.keyCode) {
+			// Left arrow.
+			case 37:
+			X -= 1;
+			break;
+			// Right arrow.
+			case 39:
+			X += 1;
+			
+			break;
+		
+			//Up arrow
+			case 38:
+			Y -= 1;
+			break;
+		
+			//Down arrow
+			case 40:
+			Y += 1;
+			break;
+		}
+	}
+    </script>
+  </head>
+  
+  <body onload="drawGameSVG()">
+    <h1>
+      Quest Complete
+    </h1>
+    <!-- Create the SVG pane. -->
+    <svg xmlns="http://www.w3.org/2000/svg" height="501" width="501">
+      <!-- Create the board. -->
+	  <defs>
+	  <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+		<path d="M 10 0 L 0 0 0 10" fill="none" stroke="blue" stroke-width="0.5"/>
+	  </pattern>
+	  <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+		<rect width="100" height="100" fill="url(#smallGrid)"/>
+		<path d="M 100 0 L 0 0 0 100" fill="none" stroke="blue" stroke-width="1"/>
+	  </pattern>
+	</defs>
 
-<p>I'm hosted with GitHub Pages.</p>
+		<rect width="100%" height="100%" fill="url(#grid)" />
+      <!-- Create the ball. -->
+      <circle cx="150" cy="150" r="15" fill="blue" id="ball" />
+    </svg>
+  </body>
 
-<iframe width="560" height="315" src="//www.youtube.com/embed/XuhgHzuPYiI" frameborder="0" allowfullscreen></iframe>
-
-<p>
-  An of course the only thing here is the sound of an adventure waiting to happen.
-</p>
-
-</body>
-</html>
+</
