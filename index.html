@@ -1,3 +1,4 @@
+
 <!DOCTYPE HTML>
 <html>
   
@@ -8,24 +9,34 @@
       var Y = 150; // Ball y position.
       
       // This function is called on page load.
+
+
       function drawGameSVG() {
+
         // Play the game until the ball stops.
         gameLoop = setInterval(drawBall, 0);
+
         // Add keyboard listener.
         window.addEventListener('keydown', whatKey, true);
       }
+
       function drawBall() {
+
         // Change the ball location.
         ball.setAttribute("cx", X);
         ball.setAttribute("cy", Y);
 	}
 		// Get key press.
+
+
 	function whatKey(evt) {
+
 		switch (evt.keyCode) {
 			// Left arrow.
 			case 37:
 			X -= 1;
 			break;
+
 			// Right arrow.
 			case 39:
 			X += 1;
@@ -69,4 +80,5 @@
     </svg>
   </body>
 
-</
+</html>
+

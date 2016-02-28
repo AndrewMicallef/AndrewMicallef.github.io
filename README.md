@@ -1,7 +1,11 @@
-Hello World
-===========
+This will be where I learn to make a 3D browser game in java script?
 
-I'm Using Markup
-----------------
+#Day 0:
 
-* Here is [my GitHub page](http://AndrewMicallef.github.io/)
+ - [x] step one: make an object move across a canvas
+ 
+ - [ ] New Quest: make the motion smooth
+ - [ ] New Quest: add something to interact with
+ - [ ] New Quest: radial axis
+ - [ ] New Quest: add a new object that appears at a 
+	psuedo random time
