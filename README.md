@@ -1,5 +1,5 @@
 This will be where I learn to make a 3D browser game in java script?
-
+Because my ex girlfriend was a massive influence on me and I can't actually think for myself.
 #Day 0:
 
  - [x] step one: make an object move across a canvas
