@@ -65,14 +65,18 @@
     }
 
     function drawBall() {
-        p = p + impulse;
-        v = p / mass;
-        
+        for (i = 0; i < 2; i++){
+            p[i] = p[i] + impulse[i];
+        }
+        for (i = 0; i < 2; i++){
+            v[i] = p[i] / mass;
+        }
         X += v[0];
         Y += v[1];
         // Change the player location.
         player.setAttribute("cx", X);
         player.setAttribute("cy", Y);
+        impulse = [0,0];
 	}
 
     // Get key press.
@@ -81,28 +85,20 @@
 		switch (evt.keyCode) {
 			// Left arrow.
 			case 37:
-            if ((v[0] + v_max) > 0) {  
-                impulse[0] -= 1;
-            }
+            impulse[0] = -1;
             break;
 			// Right arrow.
 			case 39:
-            if ((v[0] - v_max) < 0) {  
-                impulse[0] += 1;
-            }
-			break;
+            impulse[0] = 1;
+            break;
 			//Up arrow
 			case 38:
-			if ((v[1] + v_max) > 0) {  
-                impulse[1] -= 1;
-            }
-			break;
+			impulse[1] = -1;
+            break;
 			//Down arrow
 			case 40:
-			if ((v[1] - v_max) < 0) {  
-                impulse[1] += 1;
-            }
-			break;
+            impulse[1] = 1;
+            break;
 		}
 	}
     </script>
