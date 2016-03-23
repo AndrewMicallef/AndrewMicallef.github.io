@@ -13,15 +13,35 @@
     var X = 150; // Ball x position.
     var Y = 150; // Ball y position.
     
-    var vx = 0; // Ball initial x velocity
-    var vy = 0; // Ball initial y velocity
+    var v = [0,0]; // Ball initial x velocity
     
-    var vx_max = 15; // max velocity in x
-    var vy_max = 15; // max velocity in y
-
+    var v_max = 2; // max velocity
+    
+    var mass = 1;
+    
+    var impulse = [0,0];
+    
+    var p = [0, 0];
+    console.log("velocty is " + v);
+    console.log("momentum is " + p);
+    
+    
+    /* The momentum principle:
+       -----------------------
+       
+       An object has momentum. Momentum is determined
+       as the mass of the object multiplied by the object's 
+       velocity.
+       
+       py = vy * mass
+       px = px * mass
+       
+       Force acts on momentum. The impulse is the force over dt.
+       
+       p = p + F/dt
+    */
+    
     var xmlns = "http://www.w3.org/2000/svg";
-    
-    
     
     // Quest: Find a way to land the traveller in the world
     var traveller = document.createElementNS(xmlns, "circle");      
@@ -37,7 +57,7 @@
     function drawGameSVG() {
 
         // Play the game until the player stops.
-        gameLoop = setInterval(drawBall, 10);
+        gameLoop = setInterval(drawBall, 1);
 
         // Add keyboard listener.
         window.addEventListener('keydown', whatKey, true);
@@ -45,9 +65,11 @@
     }
 
     function drawBall() {
+        p = p + impulse;
+        v = p / mass;
         
-        X += vx;
-        Y += vy;
+        X += v[0];
+        Y += v[1];
         // Change the player location.
         player.setAttribute("cx", X);
         player.setAttribute("cy", Y);
@@ -59,26 +81,26 @@
 		switch (evt.keyCode) {
 			// Left arrow.
 			case 37:
-            if ((vx + vx_max) > 0) {  
-                vx -= 1;
+            if ((v[0] + v_max) > 0) {  
+                impulse[0] -= 1;
             }
             break;
 			// Right arrow.
 			case 39:
-            if ((vx - vx_max) < 0) {  
-                vx += 1;
+            if ((v[0] - v_max) < 0) {  
+                impulse[0] += 1;
             }
 			break;
 			//Up arrow
 			case 38:
-			if ((vy + vy_max) > 0) {  
-                vy -= 1;
+			if ((v[1] + v_max) > 0) {  
+                impulse[1] -= 1;
             }
 			break;
 			//Down arrow
 			case 40:
-			if ((vy - vy_max) < 0) {  
-                vy += 1;
+			if ((v[1] - v_max) < 0) {  
+                impulse[1] += 1;
             }
 			break;
 		}
