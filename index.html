@@ -1,53 +1,75 @@
-
 <!DOCTYPE HTML>
-<html>
-  
+<html> 
   <head>
-    <script type="text/javascript">
-      // Global variables
-      var X = 150; // Ball x position.
-      var Y = 150; // Ball y position.
+      <style>
+          .Player {
+            fill:#ffffff;
+            stroke:#0000ff;
+          }
+      </style>
       
-      // This function is called on page load.
+    <script type="text/javascript">
+    // Global variables
+    var X = 150; // Ball x position.
+    var Y = 150; // Ball y position.
+    
+    var vx = 0; // Ball initial x velocity
+    var vy = 0; // Ball initial y velocity
+    
+    var vx_max = 150; // max velocity in x
+    var vy_max = 150; // max velocity in y
 
+    var xmlns = "http://www.w3.org/2000/svg";
+    
+    
+    // Quest: Find a way to land the traveller in the world
+    var traveller = document.createElementNS(xmlns, "circle");      
+    
+    traveller.setAttributeNS(null,"x",50);
+    traveller.setAttributeNS(null,"y",50);
+    traveller.setAttributeNS(null,"r",50);
+    traveller.setAttributeNS(null,"fill", "black");
+    document.documentElement.appendChild(traveller);
+    
+    // This function is called on page load.
 
-      function drawGameSVG() {
+    function drawGameSVG() {
 
-        // Play the game until the ball stops.
-        gameLoop = setInterval(drawBall, 0);
+        // Play the game until the player stops.
+        gameLoop = setInterval(drawBall, 1);
 
         // Add keyboard listener.
         window.addEventListener('keydown', whatKey, true);
-      }
+        
+    }
 
-      function drawBall() {
+    function drawBall() {
 
-        // Change the ball location.
-        ball.setAttribute("cx", X);
-        ball.setAttribute("cy", Y);
+        // Change the player location.
+        player.setAttribute("cx", X + vx);
+        player.setAttribute("cy", Y + vy);
 	}
-		// Get key press.
 
-
+    // Get key press.
 	function whatKey(evt) {
 
 		switch (evt.keyCode) {
 			// Left arrow.
 			case 37:
-			X -= 1;
-			break;
-
+            if ((vx + vx_max) > 0) {  
+                vx -= 10;
+            }
+            break;
 			// Right arrow.
 			case 39:
-			X += 1;
-			
+            if ((vx - vx_max) < 0) {  
+                vx += 10;
+            }
 			break;
-		
 			//Up arrow
 			case 38:
 			Y -= 1;
 			break;
-		
 			//Down arrow
 			case 40:
 			Y += 1;
@@ -66,7 +88,7 @@
       <!-- Create the board. -->
 	  <defs>
 	  <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
-		<path d="M 10 0 L 0 0 0 10" fill="none" stroke="blue" stroke-width="0.5"/>
+		<path d="M 10 0 L 0 0 0 10" fill="none" stroke="lightblue" stroke-width="1"/>
 	  </pattern>
 	  <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
 		<rect width="100" height="100" fill="url(#smallGrid)"/>
@@ -74,9 +96,15 @@
 	  </pattern>
 	</defs>
 
-		<rect width="100%" height="100%" fill="url(#grid)" />
-      <!-- Create the ball. -->
-      <circle cx="150" cy="150" r="15" fill="blue" id="ball" />
+    <rect width="100%" height="100%" fill="url(#grid)" />
+    <!-- Create the player. -->
+    <circle
+        class="Player"
+        cx="150" 
+        cy="150" 
+        r="15" 
+        id="player" />
+     
     </svg>
   </body>
 
