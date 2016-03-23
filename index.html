@@ -16,21 +16,15 @@
     var vx = 0; // Ball initial x velocity
     var vy = 0; // Ball initial y velocity
     
-    var vx_max = 15; // max velocity in x
-    var vy_max = 15; // max velocity in y
+    var vx_max = 2; // max velocity in x
+    var vy_max = 2; // max velocity in y
 
     var xmlns = "http://www.w3.org/2000/svg";
     
     
     
     // Quest: Find a way to land the traveller in the world
-    var traveller = document.createElementNS(xmlns, "circle");      
     
-    traveller.setAttributeNS(null,"x",50);
-    traveller.setAttributeNS(null,"y",50);
-    traveller.setAttributeNS(null,"r",50);
-    traveller.setAttributeNS(null,"fill", "black");
-    document.documentElement.appendChild(traveller);
     
     // This function is called on page load.
 
@@ -42,6 +36,9 @@
         // Add keyboard listener.
         window.addEventListener('keydown', whatKey, true);
         
+		
+		    
+
     }
 
     function drawBall() {
@@ -51,6 +48,16 @@
         // Change the player location.
         player.setAttribute("cx", X);
         player.setAttribute("cy", Y);
+		
+		if ((vx == vx_max) || (vy == vy_max)){
+			var traveller = document.createElementNS(xmlns, "circle");      
+
+			traveller.setAttributeNS(null,"r",10);
+			traveller.setAttributeNS(null,"fill", "black");
+		    traveller.setAttributeNS(null,"cx", X);
+			traveller.setAttributeNS(null,"cy", Y);
+			document.getElementById('Scape').appendChild(traveller);
+		}
 	}
 
     // Get key press.
@@ -87,11 +94,12 @@
   </head>
   
   <body onload="drawGameSVG()">
+  
     <h1>
       Quest Complete
     </h1>
     <!-- Create the SVG pane. -->
-    <svg xmlns="http://www.w3.org/2000/svg" height="501" width="501">
+    <svg xmlns="http://www.w3.org/2000/svg" height="501" width="501" id="Scape">
       <!-- Create the board. -->
 	  <defs>
 	  <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
