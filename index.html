@@ -16,10 +16,11 @@
     var vx = 0; // Ball initial x velocity
     var vy = 0; // Ball initial y velocity
     
-    var vx_max = 150; // max velocity in x
-    var vy_max = 150; // max velocity in y
+    var vx_max = 15; // max velocity in x
+    var vy_max = 15; // max velocity in y
 
     var xmlns = "http://www.w3.org/2000/svg";
+    
     
     
     // Quest: Find a way to land the traveller in the world
@@ -36,7 +37,7 @@
     function drawGameSVG() {
 
         // Play the game until the player stops.
-        gameLoop = setInterval(drawBall, 1);
+        gameLoop = setInterval(drawBall, 10);
 
         // Add keyboard listener.
         window.addEventListener('keydown', whatKey, true);
@@ -44,10 +45,12 @@
     }
 
     function drawBall() {
-
+        
+        X += vx;
+        Y += vy;
         // Change the player location.
-        player.setAttribute("cx", X + vx);
-        player.setAttribute("cy", Y + vy);
+        player.setAttribute("cx", X);
+        player.setAttribute("cy", Y);
 	}
 
     // Get key press.
@@ -57,22 +60,26 @@
 			// Left arrow.
 			case 37:
             if ((vx + vx_max) > 0) {  
-                vx -= 10;
+                vx -= 1;
             }
             break;
 			// Right arrow.
 			case 39:
             if ((vx - vx_max) < 0) {  
-                vx += 10;
+                vx += 1;
             }
 			break;
 			//Up arrow
 			case 38:
-			Y -= 1;
+			if ((vy + vy_max) > 0) {  
+                vy -= 1;
+            }
 			break;
 			//Down arrow
 			case 40:
-			Y += 1;
+			if ((vy - vy_max) < 0) {  
+                vy += 1;
+            }
 			break;
 		}
 	}
