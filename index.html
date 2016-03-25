@@ -10,20 +10,45 @@
       
     <script type="text/javascript">
     // Global variables
-    var X = 150; // Ball x position.
-    var Y = 150; // Ball y position.
     
-    var v = [0,0]; // Ball initial x velocity
+    // a structure for geometrics
+    function xy (x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    
+    function object (loc = [0,0], v = [0,0], mass = 1) {
+        this.loc = new xy(loc);
+        this.mass = mass;
+        this.v = new xy(v)
+        
+        this.p = function() {
+            p = new xy([0, 0]);
+            p.x = this.x * this.mass;
+            p.y = this.y * this.mass;
+        }
+        
+        this.updatepos = function (impulse) {
+            this.p.x = this.p.x + impulse.x;
+            this.p.y = this.p.y + impulse.y;
+           
+            this.v.x = this.p.x / this.mass;
+            this.v.y = this.p.y /this.mass;
+
+            this.loc.x += this.v.x;
+            this.loc.y += this.v.y;
+        }
+    }
+    
+    
+    Ball = new object([150,150], [0,0], 1);
     
     var v_max = 2; // max velocity
     
-    var mass = 1;
+    var impulse = new xy([0,0]);
     
-    var impulse = [0,0];
-    
-    var p = [0, 0];
-    console.log("velocty is " + v);
-    console.log("momentum is " + p);
+    console.log("velocty is " + Ball.v);
+    console.log("momentum is " + Ball.p.x + Ball.p.y);
     
     
     /* The momentum principle:
@@ -65,18 +90,14 @@
     }
 
     function drawBall() {
-        for (i = 0; i < 2; i++){
-            p[i] = p[i] + impulse[i];
-        }
-        for (i = 0; i < 2; i++){
-            v[i] = p[i] / mass;
-        }
-        X += v[0];
-        Y += v[1];
+        Ball.updatepos(impulse);
+        impulse.x = 0;
+        impulse.y = 0;
+        
         // Change the player location.
-        player.setAttribute("cx", X);
-        player.setAttribute("cy", Y);
-        impulse = [0,0];
+        player.setAttribute("cx", Ball.loc.x);
+        player.setAttribute("cy", Ball.loc.y);
+        
 	}
 
     // Get key press.
@@ -85,19 +106,19 @@
 		switch (evt.keyCode) {
 			// Left arrow.
 			case 37:
-            impulse[0] = -1;
+            impulse.x = -1;
             break;
 			// Right arrow.
 			case 39:
-            impulse[0] = 1;
+            impulse.x = 1;
             break;
 			//Up arrow
 			case 38:
-			impulse[1] = -1;
+			impulse.y = -1;
             break;
 			//Down arrow
 			case 40:
-            impulse[1] = 1;
+            impulse.y = 1;
             break;
 		}
 	}
