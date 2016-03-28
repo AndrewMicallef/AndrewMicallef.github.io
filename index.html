@@ -43,12 +43,19 @@
     
     Ball = new object([150,150], [0,0], 1);
     
+<<<<<<< HEAD
     var v_max = 2; // max velocity
     
     var impulse = new xy([0,0]);
     
     console.log("velocty is " + Ball.v);
     console.log("momentum is " + Ball.p.x + Ball.p.y);
+=======
+    var p = [0, 0];
+    
+    console.log("velocty is " + v);
+    console.log("momentum is " + p);
+>>>>>>> Logging
     
     
     /* The momentum principle:
@@ -68,6 +75,8 @@
     
     var xmlns = "http://www.w3.org/2000/svg";
     
+    
+    
     // Quest: Find a way to land the traveller in the world
     var traveller = document.createElementNS(xmlns, "circle");      
     
@@ -82,14 +91,17 @@
     function drawGameSVG() {
 
         // Play the game until the player stops.
-        gameLoop = setInterval(drawBall, 1);
+        gameLoop = setInterval(drawBall, 0);
 
         // Add keyboard listener.
         window.addEventListener('keydown', whatKey, true);
         
     }
 
+    
+    
     function drawBall() {
+<<<<<<< HEAD
         Ball.updatepos(impulse);
         impulse.x = 0;
         impulse.y = 0;
@@ -97,6 +109,25 @@
         // Change the player location.
         player.setAttribute("cx", Ball.loc.x);
         player.setAttribute("cy", Ball.loc.y);
+=======
+        var log = document.getElementById('log');
+        
+        for (i = 0; i < 2; i++){
+            p[i] = p[i] + impulse[i];
+        }
+        for (i = 0; i < 2; i++){
+            v[i] = p[i] / mass;
+        }
+        X += v[0];
+        Y += v[1];
+        // Change the player location.
+        player.setAttribute("cx", X);
+        player.setAttribute("cy", Y);
+        
+        impulse = [0,0];
+        log.textContent = "> X: "+X +"\r\n> Y: " + Y;
+        
+>>>>>>> Logging
         
 	}
 
@@ -150,6 +181,16 @@
         cy="150" 
         r="15" 
         id="player" />
+        
+        
+    <!-- AND ANDREW SAID: GIVE ME A CONSOLE -->
+      <text
+     class="FeedBack text"
+     y="20"
+     x="0"
+     id="CONSOLE">
+    <tspan id="log">Feed Back</tspan>
+    </text> 
      
     </svg>
   </body>
