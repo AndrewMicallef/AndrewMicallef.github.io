@@ -6,6 +6,10 @@
             fill:#ffffff;
             stroke:#0000ff;
           }
+          .FeedBack {
+            font-family: "Courier New", Courier, monospace;
+            fill: red;
+          }
       </style>
       
     <script type="text/javascript">
@@ -70,7 +74,6 @@
     
     
     function drawBall() {
-        var log = document.getElementById('log');
         
         for (i = 0; i < 2; i++){
             p[i] = p[i] + impulse[i];
@@ -85,9 +88,12 @@
         player.setAttribute("cy", Y);
         
         impulse = [0,0];
-        log.textContent = "> X: "+X +"\r\n> Y: " + Y;
         
         
+        document.getElementById('posX').textContent = "> X: " + X.toFixed(1);
+        document.getElementById('posY').textContent = "> Y: " + Y.toFixed(1);
+        document.getElementById('vX').textContent = "> vX: " + v[0].toFixed(2);
+        document.getElementById('vY').textContent = "> vY: " + v[1].toFixed(2);
 	}
 
     // Get key press.
@@ -96,19 +102,19 @@
 		switch (evt.keyCode) {
 			// Left arrow.
 			case 37:
-            impulse[0] = -1;
+            impulse[0] = -0.01;
             break;
 			// Right arrow.
 			case 39:
-            impulse[0] = 1;
+            impulse[0] = 0.01;
             break;
 			//Up arrow
 			case 38:
-			impulse[1] = -1;
+			impulse[1] = -0.01;
             break;
 			//Down arrow
 			case 40:
-            impulse[1] = 1;
+            impulse[1] = 0.01;
             break;
 		}
 	}
@@ -117,7 +123,7 @@
   
   <body onload="drawGameSVG()">
     <h1>
-      Quest Complete
+      The Scape:
     </h1>
     <!-- Create the SVG pane. -->
     <svg xmlns="http://www.w3.org/2000/svg" height="501" width="501">
@@ -143,12 +149,11 @@
         
         
     <!-- AND ANDREW SAID: GIVE ME A CONSOLE -->
-      <text
-     class="FeedBack text"
-     y="20"
-     x="0"
-     id="CONSOLE">
-    <tspan id="log">Feed Back</tspan>
+    <text class="FeedBack text" y="20" x="0" id="CONSOLE">
+        <tspan id="posX">Feed Back</tspan>
+        <tspan id="posY" x="0" dy="14">Feed Back</tspan>
+        <tspan id="vX" x="0" dy="14">Feed Back</tspan>
+        <tspan id="vY" x="0" dy="14">Feed Back</tspan>
     </text> 
      
     </svg>
