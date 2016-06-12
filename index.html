@@ -3,8 +3,8 @@
   <head>
       <style>
           .Player {
-            fill:#ffffff;
-            stroke:#0000ff;
+            fill: white;
+            stroke: blue;
           }
           .FeedBack {
             font-family: "Courier New", Courier, monospace;
@@ -24,6 +24,8 @@
     var mass = 1;
     
     var impulse = [0,0];
+    
+    var rotation = 0;
     
     var p = [0, 0];
     
@@ -84,9 +86,16 @@
         X += v[0];
         Y += v[1];
         // Change the player location.
-        player.setAttribute("cx", X);
-        player.setAttribute("cy", Y);
-        
+       pilot.setAttribute("transform", 
+                               "translate(" 
+                               +  X.toString()
+                               + ","
+                               + Y.toString()
+                               + "), rotate("
+                               + rotation
+                               +")");
+                               
+       
         impulse = [0,0];
         
         
@@ -94,6 +103,7 @@
         document.getElementById('posY').textContent = "> Y: " + Y.toFixed(1);
         document.getElementById('vX').textContent = "> vX: " + v[0].toFixed(2);
         document.getElementById('vY').textContent = "> vY: " + v[1].toFixed(2);
+        document.getElementById('theta').textContent = "> theta: " + rotation.toFixed(3);
 	}
 
     // Get key press.
@@ -102,11 +112,11 @@
 		switch (evt.keyCode) {
 			// Left arrow.
 			case 37:
-            impulse[0] = -0.01;
+            rotation -= 1;
             break;
 			// Right arrow.
 			case 39:
-            impulse[0] = 0.01;
+            rotation += 1;
             break;
 			//Up arrow
 			case 38:
@@ -146,7 +156,72 @@
         cy="150" 
         r="15" 
         id="player" />
-        
+    
+    
+    <!-- TODO: 
+            [] find the pilots axis of rotation
+            [] find a way to access the translation, rotation and scale independently
+                    - pilot.getAttribute("transform") gives a string.
+                       str =  pilot.getAttribute("transform")
+                       str.split(",")
+                       > Array [ "rotate(50)", "translate(500", "210)", " scale(0.1)" ]
+                       
+                       In this way I might be able to access each element independently.
+                       This is a bit of a hack, and if I could figure out how to construct 
+                       the pilot object so that it's axis of rotation is it's own centre
+                       that would be much better.
+                       
+    -->
+     <g
+       id="pilot"
+       transform=translate(20,0.5),rotate(15)>
+      <rect style="opacity:1;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:100;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="0"
+         y="0"
+         width = "10"
+         height = "10"
+         />
+      <!--
+      <path
+         style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:100;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         
+         The centre is off centre
+         cx="214.28572"
+         cy="406.64792"
+         
+         d="M 214.28516 252.36133 
+            A 154.28572 154.28572 
+                0 0 0 185.19141 255.25195 
+            L 185.19141 558.0918 
+            A 154.28572 154.28572 
+                0 0 0 214.28516 560.93359 
+            A 154.28572 154.28572 
+                0 0 0 246.14453 557.42383 
+            L 246.14453 255.74609 
+            A 154.28572 154.28572 
+                0 0 0 214.28516 252.36133 
+            z 
+            
+            M 123.23828 282.31641 
+            A 154.28572 154.28572 
+                0 0 0 60 406.64844 
+            A 154.28572 154.28572 
+                0 0 0 123.23828 530.99805 
+            L 123.23828 282.31641 
+            z 
+            
+            M 308.0957 284.39844 
+            L 308.0957 529.00195 
+            A 154.28572 154.28572 
+                0 0 0 368.57227 406.64844 
+            A 154.28572 154.28572 
+                0 0 0 308.0957 284.39844 
+            z "/>
+      <path
+         style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:100;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         d="m 209.93224,519.5942 a 142.4539,24.62643 0 0 0 -142.455075,24.62681 142.4539,24.62643 0 0 0 0,0.002 c -0.15171,0.51579 -0.23047,1.03952 -0.23047,1.56961 l 0,14.67086 c 0,8.41805 19.5997,15.19563 43.943355,15.19563 l 42.42578,0 c 15.67856,0 29.37866,-2.81379 37.15234,-7.06392 a 142.4539,24.62643 0 0 0 19.16407,0.25192 142.4539,24.62643 0 0 0 19.16406,-0.25192 c 7.77368,4.25013 21.47183,7.06392 37.15039,7.06392 l 42.42774,0 c 24.34366,0 43.9414,-6.77758 43.9414,-15.19563 l 0,-14.67086 c 0,-0.53032 -0.0786,-1.05428 -0.23047,-1.57029 -1.3e-4,-3.4e-4 1.4e-4,-0.001 0,-0.001 A 142.4539,24.62643 0 0 0 209.93224,519.5942 Z"
+         /> -->
+    </g>
         
     <!-- AND ANDREW SAID: GIVE ME A CONSOLE -->
     <text class="FeedBack text" y="20" x="0" id="CONSOLE">
@@ -154,10 +229,17 @@
         <tspan id="posY" x="0" dy="14">Feed Back</tspan>
         <tspan id="vX" x="0" dy="14">Feed Back</tspan>
         <tspan id="vY" x="0" dy="14">Feed Back</tspan>
+        <tspan id="theta" x="0" dy="14">Feed Back</tspan>
     </text> 
      
     </svg>
   </body>
+  
+  <p>
+  Use the arrow keys to apply an impulse to the circular object
+  
+  New Quest: make ball apear in random location
+  </p>
 
 </html>
 
