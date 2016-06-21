@@ -3,13 +3,35 @@
   <head>
       <style>
           .Player {
-            fill: white;
-            stroke: blue;
           }
+          
+          .pilot {
+            fill: none;
+            stroke: none;
+          }
+          
           .FeedBack {
             font-family: "Courier New", Courier, monospace;
             fill: red;
           }
+          
+          .vector{
+              stroke-width: 4;
+              fill: none;              
+          }
+          
+          .momentum{
+              stroke: magenta;
+          }
+          
+          .force{
+             stroke: limegreen;
+          }
+          
+          .heading{
+             stroke: gold; 
+          }
+          
       </style>
       
     <script type="text/javascript">
@@ -19,7 +41,7 @@
     
     var v = [0,0]; // Ball initial x velocity
     
-    var v_max = 2; // max velocity
+    var v_max = 0.05; // max velocity
     
     var mass = 1;
     
@@ -29,8 +51,7 @@
     
     var p = [0, 0];
     
-    console.log("velocty is " + v);
-    console.log("momentum is " + p);
+    var p_mag = Math.sqrt(Math.pow(p[0],2), Math.pow(p[1],2));
     
     
     /* The momentum principle:
@@ -80,13 +101,35 @@
         for (i = 0; i < 2; i++){
             p[i] = p[i] + impulse[i];
         }
+        
+        //p = impulse;
+        
         for (i = 0; i < 2; i++){
             v[i] = p[i] / mass;
         }
+        
+        p_mag = Math.sqrt(Math.pow(p[0],2) + Math.pow(p[1],2));
+        
+        impulse_mag = Math.sqrt(Math.pow(impulse[0],2) + Math.pow(impulse[1],2));
+    
+    
         X += v[0];
         Y += v[1];
+        
+        if (Y > 500) {
+            Y = 0;
+        }
+        if (Y < 0) {
+            Y = 500;
+        }
+        if (X > 500) {
+            X = 0;
+        }
+        if (X < 0) {
+            X = 500;
+        }
         // Change the player location.
-       pilot.setAttribute("transform", 
+       headingvector.setAttribute("transform", 
                                "translate(" 
                                +  X.toString()
                                + ","
@@ -95,6 +138,33 @@
                                + rotation
                                +")");
                                
+       momentumvector.setAttribute("d",
+       
+                        "M " +  X.toString() 
+                        + " "
+                        +  Y.toString()
+                        + " "
+                        + " l " + (10*p[0]).toString()
+                        + " "
+                        + (10*p[1]).toString()       
+                        
+                        );
+
+
+       forcevector.setAttribute("d",
+       
+                        "M " +  X.toString() 
+                        + " "
+                        +  Y.toString()
+                        + " "
+                        + " l " + (5000*impulse[0]).toString()
+                        + " "
+                        + (5000*impulse[1]).toString()       
+                        
+                        );
+
+        
+       
        
         impulse = [0,0];
         
@@ -103,30 +173,55 @@
         document.getElementById('posY').textContent = "> Y: " + Y.toFixed(1);
         document.getElementById('vX').textContent = "> vX: " + v[0].toFixed(2);
         document.getElementById('vY').textContent = "> vY: " + v[1].toFixed(2);
+        
+        document.getElementById('pX').textContent = "> pX: " + p[0].toFixed(2);
+        document.getElementById('pY').textContent = "> pY: " + p[1].toFixed(2);
+        document.getElementById('p_mag').textContent = "> |p|: " + p_mag.toFixed(2);
+        
+        document.getElementById('fX').textContent = "> fX: " + impulse[0].toFixed(2);
+        document.getElementById('fY').textContent = "> fY: " + impulse[1].toFixed(2);
+        document.getElementById('f_mag').textContent = "> |f|: " + impulse_mag.toFixed(2);
+        
+        
         document.getElementById('theta').textContent = "> theta: " + rotation.toFixed(3);
 	}
-
+    // S(theta) = OH COH TOA
+    
+    
     // Get key press.
 	function whatKey(evt) {
-
-		switch (evt.keyCode) {
+         p_mag = Math.sqrt(Math.pow(p[0],2) + Math.pow(p[1],2))
+        console.log(p_mag);
+        keyspressed = evt.keyCode;
+		if(keyspressed ==37) {
 			// Left arrow.
-			case 37:
-            rotation -= 1;
-            break;
+            
+            rotation -= 5;
+            // Why is 90 special?
+            
+            //impulse = [Math.sin(2* Math.PI * ((rotation-90)/360)) * p_mag, 
+            //            Math.cos(2* Math.PI * ((rotation-90)/360)) * p_mag];
+            
+            }
 			// Right arrow.
-			case 39:
-            rotation += 1;
-            break;
+			if (keyspressed == 39) {
+            rotation += 5;
+            
+            //impulse = [Math.sin(2* Math.PI * ((rotation+90)/360)) * p_mag, 
+            //            Math.cos(2* Math.PI * ((rotation+90)/360)) * -p_mag];
+            
+            }
 			//Up arrow
-			case 38:
-			impulse[1] = -0.01;
-            break;
+			if (keyspressed == 38) {
+			impulse = [Math.sin(2* Math.PI * (rotation/360)) * -.01, 
+                        Math.cos(2* Math.PI * (rotation/360)) * .01];
+            }
 			//Down arrow
-			case 40:
-            impulse[1] = 0.01;
-            break;
-		}
+			if (keyspressed == 40) {
+            impulse = [Math.sin(2* Math.PI * (rotation/360)) * .01, 
+                        Math.cos(2* Math.PI * (rotation/360)) * -.01];
+            }
+ 
 	}
     </script>
   </head>
@@ -140,23 +235,16 @@
       <!-- Create the board. -->
 	  <defs>
 	  <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
-		<path d="M 10 0 L 0 0 0 10" fill="none" stroke="lightblue" stroke-width="1"/>
+		<path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="1"/>
 	  </pattern>
 	  <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
 		<rect width="100" height="100" fill="url(#smallGrid)"/>
-		<path d="M 100 0 L 0 0 0 100" fill="none" stroke="blue" stroke-width="1"/>
+		<path d="M 100 0 L 0 0 0 100" fill="none" stroke="white" stroke-width="1"/>
 	  </pattern>
 	</defs>
 
     <rect width="100%" height="100%" fill="url(#grid)" />
     <!-- Create the player. -->
-    <circle
-        class="Player"
-        cx="150" 
-        cy="150" 
-        r="15" 
-        id="player" />
-    
     
     <!-- TODO: 
             [] find the pilots axis of rotation
@@ -172,64 +260,42 @@
                        that would be much better.
                        
     -->
-     <g
-       id="pilot"
-       transform=translate(20,0.5),rotate(15)>
-      <rect style="opacity:1;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:100;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         x="0"
-         y="0"
-         width = "10"
-         height = "10"
-         />
-      <!--
-      <path
-         style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:100;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         
-         The centre is off centre
-         cx="214.28572"
-         cy="406.64792"
-         
-         d="M 214.28516 252.36133 
-            A 154.28572 154.28572 
-                0 0 0 185.19141 255.25195 
-            L 185.19141 558.0918 
-            A 154.28572 154.28572 
-                0 0 0 214.28516 560.93359 
-            A 154.28572 154.28572 
-                0 0 0 246.14453 557.42383 
-            L 246.14453 255.74609 
-            A 154.28572 154.28572 
-                0 0 0 214.28516 252.36133 
-            z 
-            
-            M 123.23828 282.31641 
-            A 154.28572 154.28572 
-                0 0 0 60 406.64844 
-            A 154.28572 154.28572 
-                0 0 0 123.23828 530.99805 
-            L 123.23828 282.31641 
-            z 
-            
-            M 308.0957 284.39844 
-            L 308.0957 529.00195 
-            A 154.28572 154.28572 
-                0 0 0 368.57227 406.64844 
-            A 154.28572 154.28572 
-                0 0 0 308.0957 284.39844 
-            z "/>
-      <path
-         style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:100;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         d="m 209.93224,519.5942 a 142.4539,24.62643 0 0 0 -142.455075,24.62681 142.4539,24.62643 0 0 0 0,0.002 c -0.15171,0.51579 -0.23047,1.03952 -0.23047,1.56961 l 0,14.67086 c 0,8.41805 19.5997,15.19563 43.943355,15.19563 l 42.42578,0 c 15.67856,0 29.37866,-2.81379 37.15234,-7.06392 a 142.4539,24.62643 0 0 0 19.16407,0.25192 142.4539,24.62643 0 0 0 19.16406,-0.25192 c 7.77368,4.25013 21.47183,7.06392 37.15039,7.06392 l 42.42774,0 c 24.34366,0 43.9414,-6.77758 43.9414,-15.19563 l 0,-14.67086 c 0,-0.53032 -0.0786,-1.05428 -0.23047,-1.57029 -1.3e-4,-3.4e-4 1.4e-4,-0.001 0,-0.001 A 142.4539,24.62643 0 0 0 209.93224,519.5942 Z"
-         /> -->
-    </g>
+     
+    <path
+    id="forcevector"
+    class="force vector"     
+    d="m0 0 l 0 0 z"/>
+     
+    <path
+    id="momentumvector"
+    class="momentum vector"     
+    d="m0 0 l 0 0 z"/>
+    
+    <path
+    id="headingvector"
+    class="heading vector"     
+    d="M 0 0 l 0 -10 z"/>
+   
         
     <!-- AND ANDREW SAID: GIVE ME A CONSOLE -->
     <text class="FeedBack text" y="20" x="0" id="CONSOLE">
         <tspan id="posX">Feed Back</tspan>
         <tspan id="posY" x="0" dy="14">Feed Back</tspan>
+        <tspan id="Velocity" x="0" dy="14">Velocity</tspan>
         <tspan id="vX" x="0" dy="14">Feed Back</tspan>
         <tspan id="vY" x="0" dy="14">Feed Back</tspan>
+        <tspan id="Momentum" x="0" dy="14">Momentum</tspan>
+        <tspan id="pX" x="0" dy="14">Feed Back</tspan>
+        <tspan id="pY" x="0" dy="14">Feed Back</tspan>
+        <tspan id="p_mag" x="0" dy="14">Feed Back</tspan>
+        
+        <tspan id="Force" x="0" dy="14">Force</tspan>
+        <tspan id="fX" x="0" dy="14">Feed Back</tspan>
+        <tspan id="fY" x="0" dy="14">Feed Back</tspan>
+        <tspan id="f_mag" x="0" dy="14">Feed Back</tspan>
+        
         <tspan id="theta" x="0" dy="14">Feed Back</tspan>
+        
     </text> 
      
     </svg>
