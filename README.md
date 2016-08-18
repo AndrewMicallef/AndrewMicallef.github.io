@@ -1,3 +1,10 @@
+
+$x = r \times \cos{\theta}$
+$y = r \times \sin{\theta}$
+
+
+----------------
+
 This will be where I learn to make a 3D browser game in java script?
 
 #Day 0+x+1:
