@@ -3,9 +3,35 @@
   <head>
       <style>
           .Player {
-            fill:#ffffff;
-            stroke:#0000ff;
           }
+          
+          .pilot {
+            fill: none;
+            stroke: none;
+          }
+          
+          .FeedBack {
+            font-family: "Courier New", Courier, monospace;
+            fill: red;
+          }
+          
+          .vector{
+              stroke-width: 4;
+              fill: none;              
+          }
+          
+          .momentum{
+              stroke: magenta;
+          }
+          
+          .force{
+             stroke: limegreen;
+          }
+          
+          .heading{
+             stroke: gold; 
+          }
+          
       </style>
       
     <script type="text/javascript">
@@ -17,45 +43,20 @@
         this.y = y;
     }
     
-    function object (loc = [0,0], v = [0,0], mass = 1) {
-        this.loc = new xy(loc);
-        this.mass = mass;
-        this.v = new xy(v)
-        
-        this.p = function() {
-            p = new xy([0, 0]);
-            p.x = this.x * this.mass;
-            p.y = this.y * this.mass;
-        }
-        
-        this.updatepos = function (impulse) {
-            this.p.x = this.p.x + impulse.x;
-            this.p.y = this.p.y + impulse.y;
-           
-            this.v.x = this.p.x / this.mass;
-            this.v.y = this.p.y /this.mass;
 
-            this.loc.x += this.v.x;
-            this.loc.y += this.v.y;
-        }
-    }
-    
-    
-    Ball = new object([150,150], [0,0], 1);
-    
-<<<<<<< HEAD
-    var v_max = 2; // max velocity
-    
-    var impulse = new xy([0,0]);
+    var v_max = 0.05; // max velocity
     
     console.log("velocty is " + Ball.v);
     console.log("momentum is " + Ball.p.x + Ball.p.y);
-=======
     var p = [0, 0];
     
     console.log("velocty is " + v);
     console.log("momentum is " + p);
->>>>>>> Logging
+    var rotation = 0;
+    
+    var p = [0, 0];
+    
+    var p_mag = Math.sqrt(Math.pow(p[0],2), Math.pow(p[1],2));
     
     
     /* The momentum principle:
@@ -101,99 +102,216 @@
     
     
     function drawBall() {
-<<<<<<< HEAD
-        Ball.updatepos(impulse);
-        impulse.x = 0;
-        impulse.y = 0;
-        
-        // Change the player location.
-        player.setAttribute("cx", Ball.loc.x);
-        player.setAttribute("cy", Ball.loc.y);
-=======
         var log = document.getElementById('log');
         
         for (i = 0; i < 2; i++){
             p[i] = p[i] + impulse[i];
         }
+        
+        //p = impulse;
+        
         for (i = 0; i < 2; i++){
             v[i] = p[i] / mass;
         }
+        
+        p_mag = Math.sqrt(Math.pow(p[0],2) + Math.pow(p[1],2));
+        
+        impulse_mag = Math.sqrt(Math.pow(impulse[0],2) + Math.pow(impulse[1],2));
+    
+    
         X += v[0];
         Y += v[1];
+        
+        if (Y > 500) {
+            Y = 0;
+        }
+        if (Y < 0) {
+            Y = 500;
+        }
+        if (X > 500) {
+            X = 0;
+        }
+        if (X < 0) {
+            X = 500;
+        }
         // Change the player location.
-        player.setAttribute("cx", X);
-        player.setAttribute("cy", Y);
-        
-        impulse = [0,0];
-        log.textContent = "> X: "+X +"\r\n> Y: " + Y;
-        
->>>>>>> Logging
-        
-	}
+       headingvector.setAttribute("transform", 
+                               "translate(" 
+                               +  X.toString()
+                               + ","
+                               + Y.toString()
+                               + "), rotate("
+                               + rotation
+                               +")");
+                               
+       momentumvector.setAttribute("d",
+       
+                        "M " +  X.toString() 
+                        + " "
+                        +  Y.toString()
+                        + " "
+                        + " l " + (10*p[0]).toString()
+                        + " "
+                        + (10*p[1]).toString()       
+                        
+                        );
 
+
+       forcevector.setAttribute("d",
+       
+                        "M " +  X.toString() 
+                        + " "
+                        +  Y.toString()
+                        + " "
+                        + " l " + (5000*impulse[0]).toString()
+                        + " "
+                        + (5000*impulse[1]).toString()       
+                        
+                        );
+
+        
+       
+       
+        impulse = [0,0];
+        
+        
+        document.getElementById('posX').textContent = "> X: " + X.toFixed(1);
+        document.getElementById('posY').textContent = "> Y: " + Y.toFixed(1);
+        document.getElementById('vX').textContent = "> vX: " + v[0].toFixed(2);
+        document.getElementById('vY').textContent = "> vY: " + v[1].toFixed(2);
+        
+        document.getElementById('pX').textContent = "> pX: " + p[0].toFixed(2);
+        document.getElementById('pY').textContent = "> pY: " + p[1].toFixed(2);
+        document.getElementById('p_mag').textContent = "> |p|: " + p_mag.toFixed(2);
+        
+        document.getElementById('fX').textContent = "> fX: " + impulse[0].toFixed(2);
+        document.getElementById('fY').textContent = "> fY: " + impulse[1].toFixed(2);
+        document.getElementById('f_mag').textContent = "> |f|: " + impulse_mag.toFixed(2);
+        
+        
+        document.getElementById('theta').textContent = "> theta: " + rotation.toFixed(3);
+	}
+    // S(theta) = OH COH TOA
+    
+    
     // Get key press.
 	function whatKey(evt) {
-
-		switch (evt.keyCode) {
+         p_mag = Math.sqrt(Math.pow(p[0],2) + Math.pow(p[1],2))
+        console.log(p_mag);
+        keyspressed = evt.keyCode;
+		if(keyspressed ==37) {
 			// Left arrow.
-			case 37:
-            impulse.x = -1;
-            break;
+            
+            rotation -= 5;
+            // Why is 90 special?
+            
+            //impulse = [Math.sin(2* Math.PI * ((rotation-90)/360)) * p_mag, 
+            //            Math.cos(2* Math.PI * ((rotation-90)/360)) * p_mag];
+            
+            }
 			// Right arrow.
-			case 39:
-            impulse.x = 1;
-            break;
+			if (keyspressed == 39) {
+            rotation += 5;
+            
+            //impulse = [Math.sin(2* Math.PI * ((rotation+90)/360)) * p_mag, 
+            //            Math.cos(2* Math.PI * ((rotation+90)/360)) * -p_mag];
+            
+            }
 			//Up arrow
-			case 38:
-			impulse.y = -1;
-            break;
+			if (keyspressed == 38) {
+			impulse = [Math.sin(2* Math.PI * (rotation/360)) * -.01, 
+                        Math.cos(2* Math.PI * (rotation/360)) * .01];
+            }
 			//Down arrow
-			case 40:
-            impulse.y = 1;
-            break;
-		}
+			if (keyspressed == 40) {
+            impulse = [Math.sin(2* Math.PI * (rotation/360)) * .01, 
+                        Math.cos(2* Math.PI * (rotation/360)) * -.01];
+            }
+ 
 	}
     </script>
   </head>
   
   <body onload="drawGameSVG()">
     <h1>
-      Quest Complete
+      Welcome to 3-Scape:
     </h1>
     <!-- Create the SVG pane. -->
     <svg xmlns="http://www.w3.org/2000/svg" height="501" width="501">
       <!-- Create the board. -->
 	  <defs>
 	  <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
-		<path d="M 10 0 L 0 0 0 10" fill="none" stroke="lightblue" stroke-width="1"/>
+		<path d="M 10 0 L 0 0 0 10" fill="none" stroke="dodgerblue" stroke-width="0.5"/>
 	  </pattern>
 	  <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
 		<rect width="100" height="100" fill="url(#smallGrid)"/>
-		<path d="M 100 0 L 0 0 0 100" fill="none" stroke="blue" stroke-width="1"/>
+		<path d="M 100 0 L 0 0 0 100" fill="none" stroke="dodgerblue" stroke-width="1"/>
 	  </pattern>
 	</defs>
 
     <rect width="100%" height="100%" fill="url(#grid)" />
     <!-- Create the player. -->
-    <circle
-        class="Player"
-        cx="150" 
-        cy="150" 
-        r="15" 
-        id="player" />
-        
+    
+    <!-- TODO: 
+            [] find the pilots axis of rotation
+            [] find a way to access the translation, rotation and scale independently
+                    - pilot.getAttribute("transform") gives a string.
+                       str =  pilot.getAttribute("transform")
+                       str.split(",")
+                       > Array [ "rotate(50)", "translate(500", "210)", " scale(0.1)" ]
+                       
+                       In this way I might be able to access each element independently.
+                       This is a bit of a hack, and if I could figure out how to construct 
+                       the pilot object so that it's axis of rotation is it's own centre
+                       that would be much better.
+                       
+    -->
+     
+    <path
+    id="forcevector"
+    class="force vector"     
+    d="m0 0 l 0 0 z"/>
+     
+    <path
+    id="momentumvector"
+    class="momentum vector"     
+    d="m0 0 l 0 0 z"/>
+    
+    <path
+    id="headingvector"
+    class="heading vector"     
+    d="M 0 0 l 0 -10 z"/>
+   
         
     <!-- AND ANDREW SAID: GIVE ME A CONSOLE -->
-      <text
-     class="FeedBack text"
-     y="20"
-     x="0"
-     id="CONSOLE">
-    <tspan id="log">Feed Back</tspan>
+    <text class="FeedBack text" y="20" x="0" id="CONSOLE">
+        <tspan id="posX">Feed Back</tspan>
+        <tspan id="posY" x="0" dy="14">Feed Back</tspan>
+        <tspan id="Velocity" x="0" dy="14">Velocity</tspan>
+        <tspan id="vX" x="0" dy="14">Feed Back</tspan>
+        <tspan id="vY" x="0" dy="14">Feed Back</tspan>
+        <tspan id="Momentum" x="0" dy="14">Momentum</tspan>
+        <tspan id="pX" x="0" dy="14">Feed Back</tspan>
+        <tspan id="pY" x="0" dy="14">Feed Back</tspan>
+        <tspan id="p_mag" x="0" dy="14">Feed Back</tspan>
+        
+        <tspan id="Force" x="0" dy="14">Force</tspan>
+        <tspan id="fX" x="0" dy="14">Feed Back</tspan>
+        <tspan id="fY" x="0" dy="14">Feed Back</tspan>
+        <tspan id="f_mag" x="0" dy="14">Feed Back</tspan>
+        
+        <tspan id="theta" x="0" dy="14">Feed Back</tspan>
+        
     </text> 
      
     </svg>
   </body>
+  
+  <p>
+  Use the arrow keys to apply an impulse to the circular object
+  
+  New Quest: make ball apear in random location
+  </p>
 
 </html>
 
