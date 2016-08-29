@@ -1,106 +1,151 @@
-    def xy (x, y) 
-        this.x = x
-        this.y = y
+from bge import logic
+from bge import events
+import numpy as np
+#---------------------------
+# Utilities
+def vector2sphere(vector):
+    """
+    converts a 3d cartesian vector to a spherical vector
+    """
     
+    x,y,z = vector
     
-    def object (loc = [0,0], v = [0,0], mass = 1) 
-        this.loc = new xy(loc)
-        this.mass = mass
-        this.v = new xy(v)
+      
+    R = np.sqrt((x**2) + (y**2) + (z*2))
+    theta = np.arctan(y/x)
+    phi = np.arcsin(z/R)
+    
+    sign = x + y + z / abs(x + y + z)
+    R = R*sign
+    theta = abs(theta)
+    phi = abs(phi)   
+
+    return np.array((R, theta, phi))
+
+def sphere2vector(sphere):
+    print('gets run')
+    """
+    converts a 3d cartesian vector to a spherical vector
+    """
+    
+    R,theta,phi = sphere
+      
+    x = R * np.sin(theta) * np.cos(phi)
+    y = R * np.sin(theta) * np.sin(phi)
+    z = R * np.cos(theta)
+    
+    return np.array((x, y, z))
+
+class physobj():
+    
+    ###dt = 0.001
+    
+    def __init__(self, loc = [0,0,0], v = [0,0,0], mass = 1):
+        self.location = np.array(loc)
+        self.mass = mass
+        self.velocity = np.array(v)
         
-        this.p = def() 
-            p = new xy([0, 0])
-            p.x = this.x * this.mass
-            p.y = this.y * this.mass
+    def applyForce(self, force, dt = 0.01):
         
+        force = np.array(force)
+        velocity = self.velocity
+        mass = self.mass
         
-        this.updatepos = def (impulse) 
-            this.p.x = this.p.x + impulse.x
-            this.p.y = this.p.y + impulse.y
+        impulse = force * dt
+        
+        momentum = velocity * mass
+        momentum = momentum + impulse
+        velocity = momentum / mass
+
+        self.velocity = velocity
+    
+    def update(self, dt = 0.01):
+        loc = self.location
+        v = self.velocity
+        
+        self.location = loc + (v*dt)
+
+
+#Game initialisation        
+logic.mouse.position = 0.5, 0.5        
+        
+scene = logic.getCurrentScene()
+
+Camera = scene.objects['Camera']
+Player = scene.objects['Player']
+Fog = scene.objects['Fog']
+
+# Controls
+
+key = logic.keyboard.events
+kbleft = key[events.AKEY]
+kbright = key[events.DKEY]
+kbup = key[events.WKEY]
+kbdown = key[events.SKEY]
+
+print('run')
+        
+def Camera_mouselook():
+    
+
+    #The mouse input:
+    # centre of screen = 0.5,0.5
+    X, Y = logic.mouse.position
+    Y = Y - 0.5
+    # original orientation
+    x,y,z = Camera.localOrientation.to_euler()
+    
+    #Y axis mouse movement shifts the camera's X axis
+    Camera.localOrientation= (x-Y, y, z)
+    #and then the cursor is set back to the centre of the screen.
+    logic.mouse.position = 0.5, 0.5
+
+def Fog_shrink():
+    
+    displacement = Fog.position - Player.position
+
+
+    # cast ray to player
+    # scale = distance to player
+
+def Player_move():
+
+    
+    def mouselook():
+        ###############
+        # Looking
+        ###############
+
+        #The mouse input:
+        # centre of screen = 0.5,0.5?
+        X, Y = logic.mouse.position
+    
+        X = X - 0.5
+        #the X movement is applied to the rotation of the character itself
+        Player.applyRotation([0, 0, -X])
+
+        #and then the cursor is set back to the center of the screen.
+        logic.mouse.position = 0.5, 0.5
+    
+   
+    def Update():
+   
+        movespd = 0.2
+        mx = 0.0
+        my = 0.0
+       
+        if kbleft > 0:
+            mx = -movespd
+        elif kbright > 0:
+            mx = movespd
+       
+        if kbup > 0:
+            my = movespd
+        elif kbdown > 0:
+            my = -movespd
            
-            this.v.x = this.p.x / this.mass
-            this.v.y = this.p.y /this.mass
-
-            this.loc.x += this.v.x
-            this.loc.y += this.v.y
-        
+        Player.position = [mx, my, 0.0]
+           
     
-    
-    
-    Ball = new object([150,150], [0,0], 1)
-    
-    var v_max = 2 # max velocity
-    
-    var impulse = new xy([0,0])
-    
-    console.log("velocty is " + Ball.v)
-    console.log("momentum is " + Ball.p.x + Ball.p.y)
-    
-    
-    # The momentum principle:
-    # -----------------------
-    # 
-    # An object has momentum. Momentum is determined
-    # as the mass of the object multiplied by the object's 
-    # velocity.
-    # 
-    # py = vy * mass
-    # px = px * mass
-    # 
-    # Force acts on momentum. The impulse is the force over dt.
-    # 
-    # p = p + F/dt
-    #
-    
-    var xmlns = "http:#www.w3.org/2000/svg"
-    
-    # Quest: Find a way to land the traveller in the world
-    var traveller = document.createElementNS(xmlns, "circle")      
-    
-    traveller.setAttributeNS(null,"x",50)
-    traveller.setAttributeNS(null,"y",50)
-    traveller.setAttributeNS(null,"r",50)
-    traveller.setAttributeNS(null,"fill", "black")
-    document.documentElement.appendChild(traveller)
-    
-    # This def is called on page load.
-
-    def drawGameSVG() 
-
-        # Play the game until the player stops.
-        gameLoop = setInterval(drawBall, 1)
-
-        # Add keyboard listener.
-        window.addEventListener('keydown', whatKey, true)
-        
-    
-
-    def drawBall() 
-        Ball.updatepos(impulse)
-        impulse.x = 0
-        impulse.y = 0
-        
-        # Change the player location.
-        player.setAttribute("cx", Ball.loc.x)
-        player.setAttribute("cy", Ball.loc.y)
-    
-    # Get key press.
-    def whatKey(evt) 
-
-        switch (evt.keyCode) 
-            # Left arrow.
-            case 37:
-            impulse.x = -1
-            break
-            # Right arrow.
-            case 39:
-            impulse.x = 1
-            break
-            #Up arrow
-            case 38:
-            impulse.y = -1
-            break
-            #Down arrow
-            case 40:
-            impulse.y = 1
-            break
+    mouselook()
+    Update()
