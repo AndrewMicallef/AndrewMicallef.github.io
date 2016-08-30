@@ -7,25 +7,23 @@ def vector2sphere(vector):
     """
     converts a 3d cartesian vector to a spherical vector
     """
-    
+
     x,y,z = vector
-    
-      
+
+    if (x,y,z) == (0,0,0):
+        return (0,0,0)
+
     R = math.sqrt((x**2) + (y**2) + (z**2))
     theta = np.arccos(z/R) #[0, pi]
-    phi = np.arctan(y/x)
-            # returns a value between [-pi/2, pi/2]
-    
+    # in the above unless R = 0, z is always less than R
+
+    if x == 0:
+        phi = 0.5 * np.pi if y > 0 else -0.5 * np.pi
+    else:
+        phi = np.arctan(y/x) 
+
     sign = (x + y + z) / abs(x + y + z)
     R = R*sign
-    
-    if z < 0:
-        theta += np.pi
-    if y < 0:
-        phi += np.pi
-    if x < 0:
-        phi += np.pi
- 
 
     return np.array((R, theta, phi))
 
@@ -34,13 +32,14 @@ def sphere2vector(sphere):
     converts a 3d cartesian vector to a spherical vector
     """
     
-    R,theta,phi = sphere
+    R, theta, phi = sphere
       
     x = R * np.sin(theta) * np.cos(phi)
     y = R * np.sin(theta) * np.sin(phi)
     z = R * np.cos(theta)
     
     return np.array((x, y, z))
+
 
 class physobj():
     
@@ -70,10 +69,6 @@ class physobj():
         v = self.velocity
         
         self.location = loc + (v*dt)
-
-
-#from bge import logic
-#from bge import events
 
 
 scene = logic.getCurrentScene()
@@ -154,28 +149,51 @@ def Camera():
 def FogWall():
     cont = logic.getCurrentController()
     obj = cont.owner
-        
+
+    # relative osition of player
+    vector = player.position - Fog_.position
+    displacement = vector.length
+    
+    # The angle of the fog wall should be the pi + the angle of the player
+    # to the origin point.
     
     ax, ay, az = obj.localOrientation.to_euler()
-    #print(obj.position)
-    
-    #calculate rotation
-    vector = Fog_.position - player.position
-    
-    R, theta, phi = vector2sphere(vector)
 
-    dx, dy, dz = sphere2vector((R, theta,phi))
-    print(R, dx,dy,dz)
-    obj.position = (dx,dy,dz)
+    # Calculate rotation
+    # ------------------
+    R, theta, phi = vector2sphere(vector)
+    obj.localOrientation = (ax, ay, phi + np.pi)
+
+    # Calculate Position
+    # ------------------
+    
+    # the fog wall should appear ~ 50 cm away from the player, allow the time
+    # to blend into the pas, rather than be a solid wall (to explain why the
+    # players nervous system / circulation continue to work)
+    
+    # Hard mode should force the player to regularly spin on the spot to allow
+    # oxygen to pass into their lungs....
+
+    x = (R - 0.5) * np.cos(phi)
+    y = (R - 0.5) * np.sin(phi)
+    
+    obj.position = (x, y, dz)
+
+    # Calculate Scale
+    # ---------------
+    
+    # The radius of the fog wall is equal to the  R / displacement
+    
+    obj.localScale = Event_Radius / displacement
+    
     #print(vector)
-    obj.localOrientation = (ax, ay, phi-(np.pi/2))
 
 
 def Fog():
     cont = logic.getCurrentController()
     obj = cont.owner
     
-    displacement = (obj.position - player.position).length
+    displacement = (player.position - obj.position).length
     
     if displacement < Event_Radius:
         obj.visible = 0
@@ -237,20 +255,6 @@ def Player():
         elif kbdown > 0:
             my = -movespd
            
-        pos = obj.position    # Get the Player's current position
-        topos = pos.copy()    # Make a copy of the Player's current position
-        topos.x += mx        # And offset the copy by the movement value for the X-axis
-       
-        if obj.rayCast(topos, pos, 0, 'wall', 1, 1)[0] != None:    # We just collided with something on the X-axis
-            mx = 0    # So stop movement on the X-axis
-           
-        pos = obj.position    # Get the Player's current position
-        topos = pos.copy()    # Make a copy of the Player's current position
-        topos.y += my        # And offset the copy by the movement value for the Y-axis
-
-        if obj.rayCast(topos, pos, 0, 'wall', 1, 1)[0] != None:    # We just collided with something on the Y-axis
-            my = 0  # So stop movement on the Y-axis
-       
         motion.dLoc = [mx, my, 0.0]
         cont.activate(motion)
            
