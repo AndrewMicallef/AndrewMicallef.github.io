@@ -17,13 +17,15 @@ def vector2sphere(vector):
     theta = np.arccos(z/R) #[0, pi]
     # in the above unless R = 0, z is always less than R
 
-    if x == 0:
-        phi = 0.5 * np.pi if y > 0 else -0.5 * np.pi
-    else:
-        phi = np.arctan(y/x) 
+    
+#        phi = 0.5 * np.pi# if y > 0 else -0.5 * np.pi
+
+    phi = np.arctan(y/x) 
+    if x < 0:
+        phi -= np.pi
 
     sign = (x + y + z) / abs(x + y + z)
-    R = R*sign
+    #R = R*sign
 
     return np.array((R, theta, phi))
 
@@ -162,7 +164,7 @@ def FogWall():
     # Calculate rotation
     # ------------------
     R, theta, phi = vector2sphere(vector)
-    obj.localOrientation = (ax, ay, phi + np.pi)
+    obj.localOrientation = (ax, ay, phi + np.pi/2)
 
     # Calculate Position
     # ------------------
@@ -174,17 +176,22 @@ def FogWall():
     # Hard mode should force the player to regularly spin on the spot to allow
     # oxygen to pass into their lungs....
 
-    x = (R - 0.5) * np.cos(phi)
-    y = (R - 0.5) * np.sin(phi)
+    x = (R - 1.5) * np.cos(phi)
+    y = (R - 1.5) * np.sin(phi)
     
-    obj.position = (x, y, dz)
+    obj.position = (x, y, 0)
 
     # Calculate Scale
     # ---------------
     
     # The radius of the fog wall is equal to the  R / displacement
     
-    obj.localScale = Event_Radius / displacement
+    obj.localScale = [Event_Radius/displacement]*3
+    
+    if displacement < Event_Radius:
+        obj.visible = 1
+    else:
+        obj.visible = 0
     
     #print(vector)
 
