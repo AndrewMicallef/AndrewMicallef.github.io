@@ -41,6 +41,19 @@ def sphere2vector(sphere):
     return np.array((x, y, z))
 
 
+class event():
+    
+
+    def __init__(self, decay_constant = 0.95)
+        self.location = np.random.rand(3)
+        self.radius = np.random.rand()
+        self.decay_constant = decay_constant
+
+    def __update__(self, ):
+        if np.random.rand() > self.decay_constant:
+            initiate_decay
+
+
 class physobj():
     
     ###dt = 0.001
@@ -49,27 +62,36 @@ class physobj():
         self.location = np.array(loc)
         self.mass = mass
         self.velocity = np.array(v)
-        
+
     def applyForce(self, force, dt = 0.01):
-        
+
         force = np.array(force)
         velocity = self.velocity
         mass = self.mass
-        
+
         impulse = force * dt
-        
+
         momentum = velocity * mass
         momentum = momentum + impulse
         velocity = momentum / mass
 
         self.velocity = velocity
-    
+
     def update(self, dt = 0.01):
         loc = self.location
         v = self.velocity
-        
-        self.location = loc + (v*dt)
 
+        self.location = loc + (v*dt)
+        
+    def get_distance_to_Event(self, ):
+        dx, dy, dz = self.loc - Event.position
+        dist = np.sqrt(dx**2 + dy**2 + dz**2)
+
+        self.distance = dist
+        
+    if dist < Event_Radius:
+            
+    
 
 scene = logic.getCurrentScene()
 
@@ -83,34 +105,9 @@ FogWall_.localScale = FogWall_.localScale * Event_Radius
 
 player = scene.objects['Player']
 
-class physobj():
-    
-    ###dt = 0.001
-    
-    def __init__(self, loc = [0,0,0], v = [0,0,0], mass = 1):
-        self.location = np.array(loc)
-        self.mass = mass
-        self.velocity = np.array(v)
-        
-    def applyForce(self, force, dt = 0.01):
-        
-        force = np.array(force)
-        velocity = self.velocity
-        mass = self.mass
-        
-        impulse = force * dt
-        
-        momentum = velocity * mass
-        momentum = momentum + impulse
-        velocity = momentum / mass
 
-        self.velocity = velocity
-    
-    def update(self, dt = 0.01):
-        loc = self.location
-        v = self.velocity
-        
-        self.location = loc + (v*dt)
+
+
 
         
 def Camera():
@@ -237,8 +234,7 @@ def Player():
 
         #and then the cursor is set back to the center of the screen.
         logic.mouse.position = 0.5, 0.5
-    
-   
+
     def Update():
    
         movespd = 0.2
