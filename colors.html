@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html> 
+  <head>
+      <style>
+          .primary {
+            fill: rgb="0,1,1";
+            stroke:#0000ff;
+          }
+          .secondary {
+            fill:#ff8888;
+            stroke:#0000ff;
+          }
+          .tertiary {
+            fill:#8888ff;
+            stroke:#0000ff;
+          }
+          
+          
+          .FeedBack {
+            font-family: "Courier New", Courier, monospace;
+            fill: red;
+          }
+      </style>      
+  </head>
+  
+  <body>
+    <h1>
+      The Colour Scape:
+    </h1>
+    <!-- Create the SVG pane. -->
+    <svg xmlns="http://www.w3.org/2000/svg" height="501" width="501">
+      <!-- Create the board. -->
+	  
+    <rect width="100%" height="100%" fill="url(#grid)" />
+    <!-- Create the player. -->
+    <circle
+        class="primary"
+        cx="100" 
+        cy="100" 
+        r="15" 
+        id="player" />
+        
+    <circle
+        class="secondary"
+        cx="50" 
+        cy="150" 
+        r="15" 
+        id="player" />
+        
+    <circle
+        class="tertiary"
+        cx="150" 
+        cy="150" 
+        r="15" 
+        id="player" />
+    
+    
+    <!-- TODO: 
+            [] find the pilots axis of rotation
+            [] find a way to access the translation, rotation and scale independently
+    --> 
+    </svg>
+  </body>
+  
+  <p>
+  Use the arrow keys to apply an impulse to the circular object
+  
+  New Quest: make ball apear in random location
+  </p>
+
+</html>
+

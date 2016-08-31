@@ -18,22 +18,12 @@ def vector2sphere(vector):
     # in the above unless R = 0, z is always less than R
 
     
-#        phi = 0.5 * np.pi# if y > 0 else -0.5 * np.pi
-
-    if x == 0:
-        phi = np.pi/2 * np.sign(y)
-    else:
-        phi = np.arctan(y/x) 
-    
+    phi = np.arctan(y/x)
     if x < 0:
-        phi -= np.pi 
+        phi -= np.pi
 
-    if x == 0: x=1
-    if y == 0: y=1
-    if z == 0: z=1
-    
-    sign = ((x/abs(x)) + (y/abs(y)) + (z/abs(z)) ) / 3
-    R = R * sign
+    sign = (x + y + z) / abs(x + y + z)
+    R = R*sign
 
     return np.array((R, theta, phi))
 
@@ -50,19 +40,6 @@ def sphere2vector(sphere):
     
     return np.array((x, y, z))
 
-'''
-class event():
-    
-
-    def __init__(self, decay_constant = 0.95)
-        self.location = np.random.rand(3)
-        self.radius = np.random.rand()
-        self.decay_constant = decay_constant
-
-    def __update__(self, ):
-        if np.random.rand() > self.decay_constant:
-            initiate_decay
-'''
 
 class physobj():
     
@@ -72,36 +49,27 @@ class physobj():
         self.location = np.array(loc)
         self.mass = mass
         self.velocity = np.array(v)
-
+        
     def applyForce(self, force, dt = 0.01):
-
+        
         force = np.array(force)
         velocity = self.velocity
         mass = self.mass
-
+        
         impulse = force * dt
-
+        
         momentum = velocity * mass
         momentum = momentum + impulse
         velocity = momentum / mass
 
         self.velocity = velocity
-
+    
     def update(self, dt = 0.01):
         loc = self.location
         v = self.velocity
-
+        
         self.location = loc + (v*dt)
-        
-    #def get_distance_to_Event(self, ):
-    #    dx, dy, dz = self.loc - Event.position
-    #    dist = np.sqrt(dx**2 + dy**2 + dz**2)
-    #
-    #    self.distance = dist
-        
-    #if dist < Event_Radius:
-            
-    
+
 
 scene = logic.getCurrentScene()
 
@@ -109,14 +77,40 @@ scene = logic.getCurrentScene()
 Event_Radius = 10
 
 Fog_ = scene.objects['Fog']
+FogWall_ = scene.objects['FogWall']
 Fog_.localScale = Fog_.localScale * Event_Radius
-
+FogWall_.localScale = FogWall_.localScale * Event_Radius
 
 player = scene.objects['Player']
 
+class physobj():
+    
+    ###dt = 0.001
+    
+    def __init__(self, loc = [0,0,0], v = [0,0,0], mass = 1):
+        self.location = np.array(loc)
+        self.mass = mass
+        self.velocity = np.array(v)
+        
+    def applyForce(self, force, dt = 0.01):
+        
+        force = np.array(force)
+        velocity = self.velocity
+        mass = self.mass
+        
+        impulse = force * dt
+        
+        momentum = velocity * mass
+        momentum = momentum + impulse
+        velocity = momentum / mass
 
-
-
+        self.velocity = velocity
+    
+    def update(self, dt = 0.01):
+        loc = self.location
+        v = self.velocity
+        
+        self.location = loc + (v*dt)
 
         
 def Camera():
@@ -156,19 +150,7 @@ def FogWall():
     cont = logic.getCurrentController()
     obj = cont.owner
 
-    # relative osition of player
-    vector = player.position - Fog_.position
-    displacement = vector.length
     
-    # The angle of the fog wall should be the pi + the angle of the player
-    # to the origin point.
-    
-    ax, ay, az = obj.localOrientation.to_euler()
-
-    # Calculate rotation
-    # ------------------
-    R, theta, phi = vector2sphere(vector)
-    obj.localOrientation = (ax, ay, phi + np.pi/2)
 
     # Calculate Position
     # ------------------
@@ -180,52 +162,75 @@ def FogWall():
     # Hard mode should force the player to regularly spin on the spot to allow
     # oxygen to pass into their lungs....
 
-    x = (abs(R) - 1.5) * np.cos(phi)
-    y = (abs(R) - 1.5) * np.sin(phi)
+    #x = (R - 0.5) * np.cos(phi)
+    #y = (R - 0.5) * np.sin(phi)
     
-    obj.position = (x, y, 0)
+    #pobj.position = (x, y, dz)
 
     # Calculate Scale
     # ---------------
     
     # The radius of the fog wall is equal to the  R / displacement
     
-    obj.localScale = [Event_Radius/displacement]*3
-    
-    if displacement < Event_Radius:
-        obj.visible = 1
-    else:
-        obj.visible = 0
+    #obj.localScale = Event_Radius / displacement
     
     #print(vector)
+   
 
-
+             
+             
+             
 def Fog():
     cont = logic.getCurrentController()
     obj = cont.owner
     
-    displacement = (player.position - obj.position).length
+    # relative position of player
+    vector = player.position - Fog_.position
+    displacement = vector.length
     
-    if displacement < Event_Radius:
-        obj.visible = 0
-    else:
-        obj.visible = 1
+    # The angle of the fog wall should be the pi + the angle of the player
+    # to the origin point.
+    
+    ax, ay, az = obj.localOrientation.to_euler()
 
-    # cast ray to player
-    # scale = distance to player
+    # Calculate rotation
+    # ------------------
+    R, theta, phi = vector2sphere(vector)
+    obj.localOrientation = (ax, ay, phi + np.pi)
 
+    
+    print(obj.meshes)
+    #for mesh in obj.meshes:
+    #   for m_index in range(len(mesh.materials)):
+    #      for v_index in range(mesh.getVertexArrayLength(m_index)):
+    #         vertex = mesh.getVertex(m_index, v_index)
+    #         # Do something with vertex here...
+    #         # ... eg: color the vertex red.
+    #         x,y,z = vertex.getXYZ()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 def Player():
     cont = logic.getCurrentController()
     obj = cont.owner
 
    
-   # motion = cont.actuators['Motion']
+    motion = cont.actuators['Motion']
    
     key = logic.keyboard.events
-    kbleft = key[events.AKEY] > 0
-    kbright = key[events.DKEY] > 0
-    kbup = key[events.WKEY] > 0
-    kbdown = key[events.SKEY] > 0
+    kbleft = key[events.AKEY]
+    kbright = key[events.DKEY]
+    kbup = key[events.WKEY]
+    kbdown = key[events.SKEY]
    
     def Init():
         logic.mouse.position = 0.5, 0.5
@@ -248,40 +253,26 @@ def Player():
 
         #and then the cursor is set back to the center of the screen.
         logic.mouse.position = 0.5, 0.5
-
+    
+   
     def Update():
    
-        #restrict motion
-        displacement = (player.position - Fog_.position).length
-        x,y,z = player.position
-        ax, ay, az = player.localOrientation.to_euler()
-        
-        #print(ax, ay, az)
-        
-        if any((kbup or kbdown, kbleft, kbright)):
-            spd = 0.2
-            # bug, using two keys at a time still gives positive motion
-                   
-            az += kbright*2*np.pi 
-            az += (kbleft*np.pi) 
-            az += ((kbup - kbdown) * np.pi/2)
-            
-            #print(kbright, kbleft, kbright - kbleft)
-            #print(kbup, kbdown)
-            
-            motion = spd * np.cos(az) + x, spd * np.sin(az) +y, 0.0
-        
-        #if displacement < Event_Radius:
+        movespd = 0.2
+        mx = 0.0
+        my = 0.0
+       
+        if kbleft > 0:
+            mx = -movespd
+        elif kbright > 0:
+            mx = movespd
+       
+        if kbup > 0:
+            my = movespd
+        elif kbdown > 0:
+            my = -movespd
            
-        #    print (R, theta, phi)
-            
-            #if R < 0:
-            #    mx, my, mz = sphere2vector((0, theta, phi))
-         
-            player.position = motion 
-        #print(player.getVelocity())
-        #motion.dLoc = [mx, my, 0.0]
-        #cont.activate(motion)
+        motion.dLoc = [mx, my, 0.0]
+        cont.activate(motion)
            
     Init()
     mouselook()
