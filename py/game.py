@@ -3,6 +3,9 @@ from bge import events
 import numpy as np
 import math
 
+def length(vector):
+    return np.linalg.norm(vector)
+
 def vector2sphere(vector):
     """
     converts a 3d cartesian vector to a spherical vector
@@ -218,9 +221,6 @@ def Player():
     cont = logic.getCurrentController()
     obj = cont.owner
 
-   
-   # motion = cont.actuators['Motion']
-   
     key = logic.keyboard.events
     kbleft = key[events.AKEY] > 0
     kbright = key[events.DKEY] > 0
@@ -250,38 +250,43 @@ def Player():
         logic.mouse.position = 0.5, 0.5
 
     def Update():
-   
+        
+        Event_Pos = np.array(Fog_.position)
+        pos_0 = np.array(player.position)
         #restrict motion
-        displacement = (player.position - Fog_.position).length
-        x,y,z = player.position
+        displacement = (pos_0 - Event_Pos).length
+        x,y,z = pos_0
         ax, ay, az = player.localOrientation.to_euler()
         
-        #print(ax, ay, az)
-        
-        if any((kbup or kbdown, kbleft, kbright)):
+        if any((kbup, kbdown, kbleft, kbright)):
             spd = 0.2
+
             # bug, using two keys at a time still gives positive motion
-                   
-            az += kbright*2*np.pi 
-            az += (kbleft*np.pi) 
-            az += ((kbup - kbdown) * np.pi/2)
+            if not (kbright and kbleft):
+                az += kbright*2*np.pi 
+                az += kbleft*np.pi
+                
+            if not (kbup and kbdown):
+                az += ((kbup - kbdown) * np.pi/2)
+
+            motion = spd * np.cos(az), spd * np.sin(az), 0.0
+            motion = np.array(motion)
             
-            #print(kbright, kbleft, kbright - kbleft)
-            #print(kbup, kbdown)
+            pos_1 = pos_0 + motion
             
-            motion = spd * np.cos(az) + x, spd * np.sin(az) +y, 0.0
-        
-        #if displacement < Event_Radius:
-           
-        #    print (R, theta, phi)
-            
-            #if R < 0:
-            #    mx, my, mz = sphere2vector((0, theta, phi))
-         
-            player.position = motion 
-        #print(player.getVelocity())
-        #motion.dLoc = [mx, my, 0.0]
-        #cont.activate(motion)
+            if displacement < Event_Radius:
+                
+                R0 = np.linalg.norm(Event_Pos - pos_0)
+                R1 = np.linalg.norm(Event_Pos - pos_1)
+                
+                if R1 > R0:
+                    R, theta, phi = vector2sphere(motion)
+                    
+                
+                
+            print(displacement)
+             
+            player.position = np.array(player.position) + np.array(motion) 
            
     Init()
     mouselook()
