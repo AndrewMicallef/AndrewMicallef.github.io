@@ -35,8 +35,8 @@ def vector2sphere(vector):
     if y == 0: y=1
     if z == 0: z=1
     
-    sign = ((x/abs(x)) + (y/abs(y)) + (z/abs(z)) ) / 3
-    R = R * sign
+    #sign = ((x/abs(x)) + (y/abs(y)) + (z/abs(z)) ) / 3
+    R = R
 
     return np.array((R, theta, phi))
 
@@ -109,7 +109,7 @@ class physobj():
 scene = logic.getCurrentScene()
 
 
-Event_Radius = 10
+Event_Radius = 20
 
 Fog_ = scene.objects['Fog']
 Fog_.localScale = Fog_.localScale * Event_Radius
@@ -209,10 +209,10 @@ def Fog():
     
     displacement = (player.position - obj.position).length
     
-    if displacement < Event_Radius:
-        obj.visible = 0
-    else:
-        obj.visible = 1
+    #if displacement < Event_Radius:
+    #    obj.visible = 0
+    #else:
+    #    obj.visible = 1
 
     # cast ray to player
     # scale = distance to player
@@ -254,7 +254,7 @@ def Player():
         Event_Pos = np.array(Fog_.position)
         pos_0 = np.array(player.position)
         #restrict motion
-        displacement = (pos_0 - Event_Pos).length
+        displacement = length(pos_0 - Event_Pos)
         x,y,z = pos_0
         ax, ay, az = player.localOrientation.to_euler()
         
@@ -273,6 +273,7 @@ def Player():
             motion = np.array(motion)
             
             pos_1 = pos_0 + motion
+            #print('v %.3f %.3f %.3f' %(spd * np.cos(az), spd * np.sin(az), 0.0))
             
             if displacement < Event_Radius:
                 
@@ -280,13 +281,14 @@ def Player():
                 R1 = np.linalg.norm(Event_Pos - pos_1)
                 
                 if R1 > R0:
-                    R, theta, phi = vector2sphere(motion)
+                    R0, theta0, phi0 = vector2sphere(pos_0)
+                    R1, theta1, phi1 = vector2sphere(pos_1)
                     
-                
-                
-            print(displacement)
-             
-            player.position = np.array(player.position) + np.array(motion) 
+                    #print('pos %.3f %.3f %.3f\n' %(R0, theta0, phi0))
+                    
+                    pos_1 = sphere2vector((R0, theta1, phi1))
+
+            player.position = pos_1
            
     Init()
     mouselook()
