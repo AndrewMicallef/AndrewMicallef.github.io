@@ -5,11 +5,32 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="svg8"
    version="1.1"
    viewBox="0 0 211.66666 158.75"
    height="600"
-   width="800">
+   width="800"
+   sodipodi:docname="interface.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview19"
+     showgrid="false"
+     inkscape:zoom="1.1101576"
+     inkscape:cx="502.31504"
+     inkscape:cy="213.73425"
+     inkscape:current-layer="svg8" />
   <defs
      id="defs2" />
   <metadata
@@ -20,10 +41,17 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
+  <rect
+     style="opacity:1;fill:none;fill-opacity:1;stroke:#0000ff;stroke-width:0.35277778;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect834"
+     width="28.986198"
+     height="7.2465496"
+     x="155.80083"
+     y="128.4156" />
   <g
      id="layer1">
     <g
@@ -76,19 +104,38 @@
        y="23.15461"
        x="44.267323"
        xml:space="preserve"><tspan
-
          y="23.15461"
          x="44.267323"
          id="tspan844">Boundry</tspan></text>
     <text
        xml:space="preserve"
-
        x="151.64671"
        y="23.020973"
        id="title1"><tspan
          id="tspan848"
          x="151.64671"
-         y="23.020973"
-         >Map</tspan></text>
+         y="23.020973">Map</tspan></text>
   </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+     x="124.45181"
+     y="133.44618"
+     id="text828"><tspan
+       sodipodi:role="line"
+       id="tspan826"
+       x="124.45181"
+       y="133.44618"
+       style="stroke-width:0.26458332">current position:</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+     x="162.58452"
+     y="133.32701"
+     id="text832"><tspan
+       sodipodi:role="line"
+       id="tspan830"
+       x="162.58452"
+       y="133.32701"
+       style="stroke-width:0.26458332">R, angle</tspan></text>
 </svg>

@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+
+    <script type="text/javascript" src="js/virtualrig.js"> </script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  </head>
+
+    <svg id="virtualrig" xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 100 40"
+      onload="makeDraggable(evt)"
+
+    >
+      <rect x="0" y="0" width="100" height="40" fill="#6f6f6f"/>
+
+      <!-- Todo: Replace with matrix transformation
+      -->
+
+        <g id="maze_translate" transform="translate(10 10)">
+          <g id="maze_rotate" transform="rotate(0 0 0)">
+            <g id="maze_scale" transform="scale(8 10)">
+            <rect name="maze" x="-0.5" y="-0.5" width="1" height="1" fill="#007bff"
+                class="draggable"/>
+          </g>
+        </g>
+      </g>
+
+      <rect x="18" y="5" width="8" height="10"   fill="#888" class="static"/>
+
+      <text id="rotout" x="18" y="5"></text>
+      <text id="transout" x="18" y="10" style="font:2px monospace;">000</text>
+
+    </svg>
+
+
+</html>
