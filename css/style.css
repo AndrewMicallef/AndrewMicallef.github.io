@@ -1,0 +1,19 @@
+.static {
+  cursor: not-allowed;
+}
+.draggable {
+  cursor: move;
+}
+
+.column {
+  float: left;
+  width: 30%;
+  max-width: 500px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
