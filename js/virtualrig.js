@@ -47,24 +47,44 @@ function makeDraggable(evt) {
 
       selectedElement = evt.target;
       offset = getMousePosition(evt);
-      //offset.x -= parseFloat(transmat[0]);
-      //offset.y -= parseFloat(transmat[0]);
+ 
+      offset.x -= parseFloat(selectedElement.attributes.x.value);
+      offset.y -= parseFloat(selectedElement.attributes.y.value);
     }
   }
 
+function coordinateSubstitution(X, Y){
+	  // map the coordinates to the marker space
+	  var marker = document.getElementById("marker")
+	  
+	  var radius = Math.sqrt(Math.pow(X, 2) + Math.pow(Y, 2));
+	  var theta = Math.atan2(Y, X);
+
+	  var mx = Math.cos(theta) * radius //* -Math.sign(X);
+	  var my = Math.sin(theta) * radius //* -Math.sign(Y);
+
+	  marker.setAttributeNS(null, "cx", mx);
+      marker.setAttributeNS(null, "cy", my);
+	  
+	    //print out the x,y
+      document.getElementById("transx").textContent = `org${X.toPrecision(3)}, ${Y.toPrecision(3)}`
+	  document.getElementById("transy").textContent = `map${mx.toPrecision(3)}, ${my.toPrecision(3)}`
+	  document.getElementById("theta").textContent = `${theta.toPrecision(3)}`
+    
+	
+}
 
 
   function drag(evt) {
     if (selectedElement) {
       evt.preventDefault();
       var coord = getMousePosition(evt);
+	  
+      selectedElement.setAttributeNS(null, "cx", coord.x - offset.x);
+      selectedElement.setAttributeNS(null, "cy", coord.y - offset.y);
 
-      selectedElement.setAttributeNS(null, "x", coord.x - offset.x);
-      selectedElement.setAttributeNS(null, "y", coord.y - offset.y);
-
-      //print out the x,y
-      svg.getElementById("transout").textContent = `x${coord.x.toPrecision(3)}\ny${coord.y.toPrecision(3)}`
-
+      
+	  coordinateSubstitution(coord.x - offset.x, coord.y - offset.y)
     }
   }
 
@@ -82,20 +102,3 @@ function makeDraggable(evt) {
   }
 
 }
-
-
-
-// Client Side Javascript to receive numbers.
-$(document).ready(function(){
-    // start up the SocketIO connection to the server - the namespace 'test' is also included here if necessary
-    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
-    // this is a callback that triggers when the "my response" event is emitted by the server.
-    socket.on('my response', function(msg) {
-        $('#log').append('<p>Received: ' + msg.data + '</p>');
-    });
-    //example of triggering an event on click of a form submit button
-    $('form#emit').submit(function(event) {
-        socket.emit('my event', {data: $('#emit_data').val()});
-        return false;
-    });
-});

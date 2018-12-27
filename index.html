@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+
+    <script type="text/javascript" src="js/virtualrig.js"> </script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  </head>
+
+
+  <body>
+    <div class="row">
+      <div class="column">
+
+    <svg id="virtualrig" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 10 10" onload="makeDraggable(evt)" style="background: #bababa;">
+
+      <g name="boundry" fill="#aaff00">
+        <circle cx="0" cy="-1" r="2"></circle>
+        <circle cx="0" cy="1" r="2"></circle>
+        <rect x="-2" y="-1" width="4" height="2"></rect>
+      </g>
+
+
+	<!-- Todo: Replace with matrix transformation
+      -->
+      <g id="maze_translate" transform="translate(0 0)">
+        <g id="maze_rotate" transform="rotate(0 0 0)">
+          <circle name="maze" cx="0" cy="0" r="1" fill="#007bff" class="draggable">
+        </circle></g>
+      </g>
+	<circle cx="0" cy="0" r=".1" style="fill:red"></circle>
+
+
+
+      <text id="rotout" x="18" y="5"></text>
+    </svg>
+    </div>
+    <div class="column">
+    <svg id="outmapping" xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 5 5" onchange="" style="background: #a0a0a0;">
+      <!-- Todo make these values inherit the maze properties-->
+      <text id="transx" x="-2" y="-2" style="font:.2px monospace;">000</text>
+      <text id="transy" x="-2" y="-1.75" style="font:.2px monospace;">000</text>
+      <text id="theta" x="-2" y="-1.5" style="font:.2px monospace;">000</text>
+
+	  <circle cx="0" cy="0" r="1" style="fill:dodgerblue"></circle>
+	  <circle id="marker" cx="0" cy="0" r=".05" style="fill:red"></circle>
+
+    </svg>
+    </div>
+  </div>
+
+
+
+
+</body></html>

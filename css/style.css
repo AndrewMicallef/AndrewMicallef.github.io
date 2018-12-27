@@ -5,9 +5,30 @@
   cursor: move;
 }
 
+.output {  
+  font: 1 px monospace;
+}
+
+.dx {
+  fill: #333300;
+}
+
+.dy {
+  fill: #ffff00;
+}
+
+.dt {
+  fill: violet;
+}
+
+
+
+
+
+/*Make columns*/
 .column {
   float: left;
-  width: 30%;
+  width: 50%;
   max-width: 500px;
 }
 
@@ -17,3 +38,4 @@
   display: table;
   clear: both;
 }
+
