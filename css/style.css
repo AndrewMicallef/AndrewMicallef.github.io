@@ -5,7 +5,7 @@
   cursor: move;
 }
 
-.output {  
+.output {
   font: 1 px monospace;
 }
 
@@ -39,3 +39,28 @@
   clear: both;
 }
 
+/* MAZE STYLING */
+.mazewall {
+  fill: #007bff;
+}
+.mazeempty {
+  fill: #eee;
+}
+
+.zone {
+  stroke-width: .3px;
+  stroke: #007bff;
+
+}
+
+.zone-A {
+  fill: #aaffaacc;
+}
+
+.zone-B {
+  fill: #aaaaffcc;
+}
+
+.zone-C {
+  fill: #ffaaaacc;
+}

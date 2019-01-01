@@ -6,15 +6,13 @@ var moveSlider = function(slider, direction) {
 }
 
 function getTransformVector(name){
-
-  var element = document.getElementById(name);
-  return element.attributes.transform.value.match(/\d+\s?/g).map(parseFloat);
 }
 
 
 function makeDraggable(evt) {
+
   var svg = evt.target;
-  console.log(evt);
+
   svg.addEventListener('mousedown', startDrag);
   svg.addEventListener('mousemove', drag);
   svg.addEventListener('mouseup', endDrag);
@@ -47,31 +45,31 @@ function makeDraggable(evt) {
 
       selectedElement = evt.target;
       offset = getMousePosition(evt);
- 
-      offset.x -= parseFloat(selectedElement.attributes.x.value);
-      offset.y -= parseFloat(selectedElement.attributes.y.value);
+
+      offset.x -= parseFloat(selectedElement.attributes.cx.value);
+      offset.y -= parseFloat(selectedElement.attributes.cy.value);
     }
   }
 
 function coordinateSubstitution(X, Y){
 	  // map the coordinates to the marker space
 	  var marker = document.getElementById("marker")
-	  
+
 	  var radius = Math.sqrt(Math.pow(X, 2) + Math.pow(Y, 2));
 	  var theta = Math.atan2(Y, X);
 
 	  var mx = Math.cos(theta) * radius //* -Math.sign(X);
 	  var my = Math.sin(theta) * radius //* -Math.sign(Y);
 
-	  marker.setAttributeNS(null, "cx", mx);
-      marker.setAttributeNS(null, "cy", my);
-	  
+	  marker.setAttributeNS(null, "cx", -mx);
+    marker.setAttributeNS(null, "cy", -my);
+
 	    //print out the x,y
-      document.getElementById("transx").textContent = `org${X.toPrecision(3)}, ${Y.toPrecision(3)}`
+    document.getElementById("transx").textContent = `org${X.toPrecision(3)}, ${Y.toPrecision(3)}`
 	  document.getElementById("transy").textContent = `map${mx.toPrecision(3)}, ${my.toPrecision(3)}`
 	  document.getElementById("theta").textContent = `${theta.toPrecision(3)}`
-    
-	
+
+
 }
 
 
@@ -79,12 +77,11 @@ function coordinateSubstitution(X, Y){
     if (selectedElement) {
       evt.preventDefault();
       var coord = getMousePosition(evt);
-	  
+
       selectedElement.setAttributeNS(null, "cx", coord.x - offset.x);
       selectedElement.setAttributeNS(null, "cy", coord.y - offset.y);
 
-      
-	  coordinateSubstitution(coord.x - offset.x, coord.y - offset.y)
+	    coordinateSubstitution(coord.x - offset.x, coord.y - offset.y)
     }
   }
 
